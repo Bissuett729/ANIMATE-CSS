@@ -1,0 +1,20 @@
+<section class="h-screen w-screen flex relative overflow-x-hidden">
+  <app-sidebar></app-sidebar>
+
+  <main 
+  class="w-full h-full transition-[margin] duration-300 relative bg-main"
+  [ngClass]="{'md:ml-64' : _signals.openSidebar$()}">
+    @if (_signals.openSidebar$()) {
+      <div (click)="_signals.setSidebar(!_signals.openSidebar$)" class="md:hidden w-full h-full bg-[#0000001a] dark:bg-[#ffffff1a] absolute top-0 z-40"></div>
+    }
+
+    <app-header></app-header>
+
+    <div class="w-full h-[calc(100%-64px)] shadow-insetShadow">
+      <router-outlet></router-outlet>
+    </div>
+
+  </main>
+</section>
+
+<app-loading-page></app-loading-page>

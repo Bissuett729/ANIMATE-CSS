@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  .mat-mdc-dialog-surface {
+    background-color: #0d1114;
+  }
+
+  .mat-mdc-dialog-surface::before {
+    border: 1px solid #101519;
+  }
+}
+
+.custom-scroll {
+  overflow-anchor: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+  -webkit-overflow-scrolling: touch;
+  overflow-anchor: none;
+}
+
+.custom-vertical-scroll::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -1,0 +1,119 @@
+<section class="w-full h-full overflow-y-auto custom-scroll flex flex-col gap-4 p-4">
+  <section class="flex items-center gap-4">
+    <label class="flex items-center">
+      <input
+        class="outline-none border-y border-l border-dashed border-gray-400 rounded-tl-xl rounded-bl-xl p-2 text-center"
+        type="number" 
+        min="0"
+        step="0.1" 
+        placeholder="Global Duration"
+        [(ngModel)]="globalDuration"
+        (ngModelChange)="updateGlobalDuration($event)"
+      />
+      <span class="outline-none border rounded-tr-xl rounded-br-xl border-gray-400 border-dashed p-2 text-center">s</span>
+    </label>
+
+    <button 
+    [matTooltip]="globalAnimationActive ? 'Stop all animations' : 'Run all animations'"
+    (click)="globalAnimationActive ? stopAllAnimations() : triggerAllAnimations()" 
+    [ngClass]="{'active': globalAnimationActive}" 
+    class="animation-button p-2 rounded-full border border-gray-400 border-dashed text-center hover:bg-[#12314d] relative overflow-hidden">
+    <div class="circle-border" [style.transitionDuration]="globalDuration"></div>
+    @if (globalAnimationActive) {
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 5m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /></svg>
+    } @else {
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M7 4v16l13 -8z" />
+    </svg>
+    }
+    </button>
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:md:grid-cols-4 gap-4">
+    @for (animation of animationsData; track $index) {
+        <div
+          class="col-span-1 flex flex-col gap-3 py-3 px-4 rounded-lg bg-gradientCardBlue border border-[#262626] transform hover:-translate-y-1 transition-[translate] duration-300"
+        >
+          <div class="w-full flex justify-center">
+            <span class="text-white font-medium text-sm">{{ animation.label }}</span>
+          </div>
+    
+          <div class="w-full flex justify-center relative">
+            <svg
+              class="absolute inset-0 blur-xl opacity-20 left-20"
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="#0079e5" />
+              <path d="M8 22l-5 -19l19 5.5z" />
+              <path d="M12.573 17.58l-6.152 -1.576l8.796 -9.466l1.914 6.64" />
+              <path d="M12.573 17.58l-1.573 -6.58l6.13 2.179" />
+              <path d="M9.527 4.893l1.473 6.107l-6.31 -1.564z" />
+            </svg>
+            <div [id]="'animation-' + $index">
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 22l-5 -19l19 5.5z" />
+                  <path d="M12.573 17.58l-6.152 -1.576l8.796 -9.466l1.914 6.64" />
+                  <path d="M12.573 17.58l-1.573 -6.58l6.13 2.179" />
+                  <path d="M9.527 4.893l1.473 6.107l-6.31 -1.564z" />
+                </svg>
+            </div>
+          </div>
+    
+          <div class="flex justify-center">
+            <label class="flex items-center justify-center">
+              <input
+                class="lg:max-w-[70%] outline-none border-y border-l border-dashed border-gray-400 rounded-tl-xl rounded-bl-xl p-2 text-center"
+                type="number" 
+                step="0.1" 
+                min="0.1" 
+                [value]="animation.currentDuration"
+                (input)="updateDuration($index, $event)"
+              />
+              <span class="outline-none border rounded-tr-xl rounded-br-xl border-gray-400 border-dashed p-2 text-center">s</span>
+            </label>
+          </div>
+    
+          <div class="flex justify-center items-center gap-3">
+            <button matTooltip="Copy css code" aria-label="Button that allows to copy the CSS code when clicked" (click)="openCssCopyModal(animation.animationClass)" class="p-2 rounded-full border border-gray-400 border-dashed text-center hover:bg-[#12314d]">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg>
+           </button>
+
+           <button 
+           [matTooltip]="animation.isActive ? 'Stop animation' : 'Run animation'" aria-label="Button that allows you to run the animation or stop the animation."
+           (click)="animation.isActive ? stopAnimation($index) : triggerAnimation($index, animation.animationClass, animation.currentDuration)" 
+           [ngClass]="{'active': animation.isActive}" 
+           class="animation-button p-2 rounded-full border border-gray-400 border-dashed text-center hover:bg-[#12314d] relative overflow-hidden">
+           <div class="circle-border" [style.transitionDuration]="animation.currentDuration"></div>
+           @if (animation.isActive) {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 5m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /></svg>
+          } @else {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M7 4v16l13 -8z" />
+            </svg>
+           }
+         </button>
+
+          </div>
+        </div>
+    }
+  </section>
+</section>
